@@ -138,7 +138,7 @@ print(del_acc)
 d = [round(normal_acc/1000,4), round(del_acc/1000,4)] #grouped sum of sales at Gender level
 rects = plt.bar( (0.2,1), d, color=('r','g'), width = 0.25)
 plt.ylim(0.85 , 0.98)
-plt.title('The accuracy changes aftet removing "Q25" feature')
+plt.title('The accuracy changes aftet removing fourteen unimportant feature')
 def autolabel(rects):
     for rect in rects:
         height = rect.get_height()
