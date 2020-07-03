@@ -1,8 +1,8 @@
 import numpy as np
 import re
 import random
- 
- 
+import re,string
+punc = '.?!:,'
  
 """
 函数说明:将切分的实验样本词条整理成不重复的词条列表，也就是词汇表
@@ -109,9 +109,25 @@ def classifyNB(vec2Classify, p0Vec, p1Vec, pClass1):
 def textParse(bigString):  # 将字符串转换为字符列表
     #print(bigString)
     listOfTokens = re.split(r'\W*', bigString)  # 将特殊符号作为切分标志进行字符串切分，即非字母、非数字
+
+    bigString = re.sub(r"[%s]+" %punc, "",bigString) # 去掉标点符号
+    bigString = bigString.split()  # 进行分割
+
+
+    #for i in bigString:
+    #    if ' ' in bigString:
+    #        list1.remove(' ')
+
+
+
+    backString = [s.lower() for s in bigString if len(s) > 2] # 进行小写转换
+    #[s.lower() for s in L]
     
+    #print str_lis
+    #print(backString)
     #bigString = [tok.lower() for tok in listOfTokens if len(tok) < 2]
-    return [tok.lower() for tok in listOfTokens if len(tok) < 2]  # 除了单个字母，例如大写的I，其它单词变成小写
+
+    return backString
  
  
 """
@@ -152,6 +168,10 @@ def spamTest():
         if classifyNB(np.array(wordVector), p0V, p1V, pSpam) != classList[docIndex]:  # 如果分类错误
             errorCount += 1  # 错误计数加1
             #print("分类错误的测试集：", ''.join(docList[docIndex]))
+            if(classList[docIndex] == 0):
+                print("这是一个正常邮件，但是错分为垃圾邮件")
+            else:
+                print("这是一个垃圾邮件，但是错分为正常邮件")
             print("分类错误的测试集：", docList[docIndex])
     print('错误率：%.2f%%' % (float(errorCount) / len(testSet) * 100))
 
