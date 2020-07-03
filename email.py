@@ -107,8 +107,11 @@ def classifyNB(vec2Classify, p0Vec, p1Vec, pClass1):
 函数说明:接收一个大字符串并将其解析为字符串列表
 """
 def textParse(bigString):  # 将字符串转换为字符列表
+    #print(bigString)
     listOfTokens = re.split(r'\W*', bigString)  # 将特殊符号作为切分标志进行字符串切分，即非字母、非数字
-    return [tok.lower() for tok in listOfTokens if len(tok) > 2]  # 除了单个字母，例如大写的I，其它单词变成小写
+    
+    #bigString = [tok.lower() for tok in listOfTokens if len(tok) < 2]
+    return [tok.lower() for tok in listOfTokens if len(tok) < 2]  # 除了单个字母，例如大写的I，其它单词变成小写
  
  
 """
@@ -119,11 +122,14 @@ def spamTest():
     classList = []
     fullText = []
     for i in range(1, 26):  # 遍历25个txt文件
-        wordList = textParse(open('email/spam/%d.txt' % i, 'r').read())  # 读取每个垃圾邮件，并字符串转换成字符串列表
+        #print(open('D:\email\spam\%d.txt' % i, 'r').read())
+        wordList = textParse(open('D:\email\spam\%d.txt' % i, 'r').read())  # 读取每个垃圾邮件，并字符串转换成字符串列表
+        #wordList = textParse(open('D:\mnist\\train-images-idx3-ubyte' , 'r').read())
+        #print(wordList)
         docList.append(wordList)
         fullText.append(wordList)
         classList.append(1)  # 标记垃圾邮件，1表示垃圾文件
-        wordList = textParse(open('email/ham/%d.txt' % i, 'r').read())  # 读取每个非垃圾邮件，并字符串转换成字符串列表
+        wordList = textParse(open('D:\email\ham\\%d.txt' % i, 'r').read())  # 读取每个非垃圾邮件，并字符串转换成字符串列表
         docList.append(wordList)
         fullText.append(wordList)
         classList.append(0)  # 标记正常邮件，0表示正常文件
@@ -145,9 +151,10 @@ def spamTest():
         wordVector = setOfWords2Vec(vocabList, docList[docIndex])  # 测试集的词集模型
         if classifyNB(np.array(wordVector), p0V, p1V, pSpam) != classList[docIndex]:  # 如果分类错误
             errorCount += 1  # 错误计数加1
+            #print("分类错误的测试集：", ''.join(docList[docIndex]))
             print("分类错误的测试集：", docList[docIndex])
     print('错误率：%.2f%%' % (float(errorCount) / len(testSet) * 100))
- 
- 
+
+
 if __name__ == '__main__':
     spamTest()
